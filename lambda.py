@@ -1,4 +1,7 @@
 import boto3
+import os
+import binascii
+
 
 def lambda_handler(event, context):
     customEndpoints = 0
@@ -10,15 +13,15 @@ def lambda_handler(event, context):
     for key in event['Endpoints'].keys(): 
         userdata = {
             "address": event['Endpoints'][key]['Address'],
-            "FirstName": event['Endpoints'][key]['Attributes']['FirstName'][0],
-            "LastName": event['Endpoints'][key]['Attributes']['LastName'][0]
+            "name": '{} {}'.format(event['Endpoints'][key]['Attributes']['FirstName'][0],
+                                   event['Endpoints'][key]['Attributes']['LastName'][0])
         }
         pdf_file = _create_pdf(userdata)
         print_job = _create_print_job(pdf_file)
         print(response)
     return
 
-def _create_pdf():
+def _create_pdf(companydata, userdata):
     pdf_file = None
     from fpdf import Template
 
@@ -32,16 +35,20 @@ def _create_pdf():
     
     #here we instantiate the template and define the HEADER
     f = Template(format="A4", elements=elements,
-                 title="Sample Invoice")
+                 title="Sample Letter")
     f.add_page()
     
     #we FILL some of the fields of the template with the information we want
     #note we access the elements treating the template instance as a "dict"
-    f["company_name"] = "Sample Company"
-    f["user_message"] = "This is a user message"
+    f["company_name"] = companydata.name
+    f["user_message"] = (
+        'Dear {} {}, \n'
+        '    Please contact us on {} as soon as possible.\n',
+        '    Yours Sincerely, {} \n'
+        .format(userdata['name'], companydata['name'], companydata['number']))
     
     #and now we render the page
-    pdf_file = "./template.pdf"
+    pdf_file = "./{}template.pdf".format(binascii.b2a_hex(os.urandom(8)))
     f.render(pdf_file)
     return pdf_file
     
@@ -51,7 +58,7 @@ def _create_print_job(pdf_file):
         os.environ['API_KEY']
         pdf_base64 = a = open(pdf_file, "rb").read().encode("base64")
         gateway=Gateway(url='https://api.printnode.com',apikey='secretAPIKey')
-        response = gateway.PrintJob(printer=None,base64=pdf_base64))
+        response = gateway.PrintJob(printer=None,base64=pdf_base64)
         '''
         Results:
         PrintJob(id=251153, printer=Printer(id=50120, computer=Computer(id=10027, name='5.2015-07-10 15:04:40.253763.TEST-COMPUTER', inet=None, inet6=None, hostname=None, version=None, create_timestamp='2015-07-10T15:04:40.253Z', state='created'), name='10027.3.TEST-PRINTER', description='description', capabilities={'capability_1': 'one', 'capability_2': 'two'}, default=False, create_timestamp='2015-07-10T15:04:40.253Z', state=None), title='PrintJob', content_type='pdf_uri', source='PythonApiClient', expire_at=None, create_timestamp='2015-07-10T15:05:27.087Z', state='new')
