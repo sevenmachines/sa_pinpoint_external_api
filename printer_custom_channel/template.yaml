@@ -19,12 +19,13 @@ Resources:
       Runtime: python3.9
       Environment:
           Variables:
-            COMPANY_NAME: ''
-            COMPANY_ADDRESS: ''
-            COMPANY_CITY: ''
-            COMPANY_POSTCODE: ''
-            COMPANY_NUMBER: ''
+            COMPANY_NAME: 'ACME Printing'
+            COMPANY_ADDRESS: '1 Main Street'
+            COMPANY_CITY: 'London'
+            COMPANY_POSTCODE: 'SW1A 1AA'
+            COMPANY_NUMBER: '0123 1234 321'
             PRINTNODE_API_KEY: ''
+            PRINT_ENABLED: 'True'
 
 Outputs:
   PrinterCustomChannelFunction:
