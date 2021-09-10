@@ -30,10 +30,12 @@ class PrinterChannel(object):
 
     def submit(self):
         for endpoint in self._event['Endpoints'].values(): 
+            attributes = endpoint['Attributes']
             userdata = {
-                "address": endpoint['Address'],
-                    "name": '{} {}'.format(endpoint['Attributes']['FirstName'],
-                                       endpoint['Attributes']['LastName'])
+                "name": attributes.get('FirstName', '') + ' ' + attributes.get('LastName', ''),
+                "address": attributes.get('Address', ''),
+                "city": attributes.get('City', ''),
+                "postcode": attributes.get('Postcode', ''),
             }
             pdf_file = self._create_sample_pdf(userdata)
             if os.environ.get("PRINT_ENABLED", True):
@@ -85,7 +87,12 @@ class PrinterChannel(object):
             'Yours sincerely,', self._companydata['name']
         ]
         self._add_lines(canvas, lines)
+        lines = [userdata['name'], userdata['address'],
+                 userdata['city'] + ' ' + userdata['postcode'],
+        ]
+        self._add_lines(canvas, lines, left=370)
         canvas.save()
+        print({"pdf_file": pdf_file})
         return pdf_file
     
     def _add_lines(self,
@@ -101,4 +108,3 @@ class MissingEnvironmentVariableError(Exception):
     def __init__(self, name):
         super().__init__("Environment variable {} is not defined."
                          .format(name))
-

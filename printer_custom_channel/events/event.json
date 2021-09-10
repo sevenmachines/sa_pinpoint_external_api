@@ -1,7 +1,34 @@
 {
-        "Endpoints": {
-            "A": {
-                "Address": "10 somewhere street",
-                "Attributes": {"FirstName": "Bob", "LastName": "Bobert"}
-                }
-        }}
+  "Message":{},
+  "Data":"The payload that's provided in the CustomMessage object in MessageConfiguration",
+  "ApplicationId":"3a9b1f4e6c764ba7b031e7183example",
+  "CampaignId":"13978104ce5d6017c72552257example",
+  "TreatmentId":"0",
+  "ActivityId":"575cb1929d5ba43e87e2478eeexample",
+  "ScheduledTime":"2020-04-08T19:00:16.843Z",
+  "Endpoints":{
+    "1dbcd396df28ac6cf8c1c2b7fexample":{
+      "ChannelType":"EMAIL",
+      "Address":"mary.major@example.com",
+      "EndpointStatus":"ACTIVE",
+      "OptOut":"NONE",
+      "Location":{
+        "City":"Seattle",
+        "Country":"USA"
+      },
+      "Demographic":{
+        "Make":"OnePlus",
+        "Platform":"android"
+      },
+      "EffectiveDate":"2020-04-01T01:05:17.267Z",
+      "Attributes":{
+        "Address": "1 high street",
+        "City": "London",
+        "Postcode": "N9 1AA",
+        "FirstName": "Bob",
+        "LastName": "Bobert"
+      },
+      "CreationDate":"2020-04-01T01:05:17.267Z"
+    }
+  }
+}
