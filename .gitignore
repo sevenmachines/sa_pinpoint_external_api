@@ -5,3 +5,6 @@ build
 dist
 .idea
 cdk.out
+.aws-sam/
+.project
+.pydevproject

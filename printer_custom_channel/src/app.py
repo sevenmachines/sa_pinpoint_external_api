@@ -1,6 +1,6 @@
 import boto3
 import os
-import binascii
+import uuid
 import base64
 from reportlab.pdfgen.canvas import Canvas
 
@@ -17,13 +17,6 @@ def lambda_handler(event, context):
         "postcode": os.environ.get("COMPANY_POSTCODE", ''),
         "number": os.environ.get("COMPANY_NUMBER", ''),
     }
-    companydata = {
-        "name": "ACME Print",
-        "address": "10 Someplace way",
-        "city": "London",
-        "postcode": "SW10 2DF",
-         "number": "0123 1234 321",
-   }
     for endpoint in event['Endpoints'].values(): 
         userdata = {
             "address": endpoint['Address'],
@@ -37,8 +30,7 @@ def lambda_handler(event, context):
 
 def _create_print_job(pdf_file):
     from printnodeapi import Gateway
-    api_key = os.environ.get('API_KEY',
-                             'lXHy1_lxxuvqH7EoR7FvRqsIgmeivFzs7UcGSYCXwPc')
+    api_key = os.environ.get('PRINTNODE_API_KEY')
     # Setup printers
     gateway=Gateway(url='https://api.printnode.com',apikey=api_key)
     try:
@@ -60,7 +52,7 @@ def _create_print_job(pdf_file):
 def _create_sample_pdf(companydata,
                 userdata):
     from reportlab.lib.pagesizes import A4
-    pdf_file = "./{}template.pdf".format(binascii.b2a_hex(os.urandom(8)))
+    pdf_file = "./{}template.pdf".format(uuid.uuid4().hex)
     canvas = Canvas(pdf_file, pagesize=A4)
     lines = [
         companydata['name'], companydata['address'], companydata['city'] + ' ' + companydata['postcode'], companydata['number'],
@@ -81,20 +73,3 @@ def _add_lines(canvas, lines,
                left=70):
     for idx, line in enumerate(lines):
         canvas.drawString(left, top-(idx * lineheight),  line)
-
-if __name__ == '__main__':
-    event = {
-        "Endpoints": {
-            "A": {
-                "Address": "10 somewhere street",
-                "Attributes": {"FirstName": "Bob", "LastName": "Bobert"}
-                }
-        }}
-    context = None
-    lambda_handler(event, context)
-    
-    
-'''
-        Results:
-        PrintJob(id=251153, printer=Printer(id=50120, computer=Computer(id=10027, name='5.2015-07-10 15:04:40.253763.TEST-COMPUTER', inet=None, inet6=None, hostname=None, version=None, create_timestamp='2015-07-10T15:04:40.253Z', state='created'), name='10027.3.TEST-PRINTER', description='description', capabilities={'capability_1': 'one', 'capability_2': 'two'}, default=False, create_timestamp='2015-07-10T15:04:40.253Z', state=None), title='PrintJob', content_type='pdf_uri', source='PythonApiClient', expire_at=None, create_timestamp='2015-07-10T15:05:27.087Z', state='new')
-'''
