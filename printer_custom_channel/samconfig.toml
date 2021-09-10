@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "printer-custom-channel"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-c9v70fijbrub"
+s3_prefix = "printer-custom-channel"
+region = "eu-west-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"

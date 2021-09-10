@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  printer_custom_channel
+
+  Sample SAM Template for printer_custom_channel
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  PrinterCustomChannelFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: src/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+
+Outputs:
+  PrinterCustomChannelFunction:
+    Description: "Printer Custom Channel Lambda Function ARN"
+    Value: !GetAtt PrinterCustomChannelFunction.Arn
+  HelloWorldFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt PrinterCustomChannelFunctionRole.Arn
