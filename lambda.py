@@ -38,7 +38,7 @@ def lambda_handler(event, context):
 def _create_print_job(pdf_file):
     from printnodeapi import Gateway
     api_key = os.environ.get('API_KEY',
-                             'lXHy1_lxxuvqH7EoR7FvRqsIgmeivFzs7UcGSYCXwPc')
+                             'XXX')
     # Setup printers
     gateway=Gateway(url='https://api.printnode.com',apikey=api_key)
     try:
